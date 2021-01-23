@@ -1,80 +1,14 @@
 import { readDirectory, readJsonFile } from "./utils/file"
-import prompts from "prompts"
+import {
+  askForDataFile,
+  askForFieldName,
+  askForSearchTerm,
+  printSearchResults,
+} from "./cliPrompts"
 import * as path from "path"
 import { searchList } from "./searchEngine"
 import { getAllItemKeys } from "./utils/object"
-import { newError } from "./utils/error"
 import { ErrorCode } from "./constants/errorCode"
-
-const askForDataFile = async (files: string[]): Promise<string> => {
-  const { dataFileName } = await prompts({
-    type: "select",
-    name: "dataFileName",
-    message: "Select datafile",
-    choices: files.map((f) => ({ title: f, value: f })),
-  })
-  if (dataFileName == null) {
-    throw newError("Cancelled by user", ErrorCode.cancelledByUser)
-  }
-  return dataFileName
-}
-
-const askForFieldName = async (fieldNames: string[]): Promise<string> => {
-  let isAborted = false
-  const { fieldName } = await prompts({
-    type: "autocomplete",
-    name: "fieldName",
-    message: "Enter field name",
-    choices: fieldNames.map((fn) => ({ title: fn, value: fn })),
-    onState: (state) => {
-      isAborted = state.aborted
-    },
-  })
-
-  if (isAborted) {
-    throw newError("Cancelled by user", ErrorCode.cancelledByUser)
-  }
-  if (fieldName == null) {
-    console.log("Field name not found")
-    return await askForFieldName(fieldNames)
-  }
-  return fieldName
-}
-
-const askForSearchTerm = async (): Promise<string> => {
-  const { searchTerm } = await prompts({
-    type: "text",
-    name: "searchTerm",
-    message: "Enter search term",
-  })
-  if (searchTerm == null) {
-    throw newError("Cancelled by user", ErrorCode.cancelledByUser)
-  }
-  return searchTerm
-}
-
-const printSearchResults = (items: unknown[]) => {
-  if (!items.length) {
-    console.log("No results found")
-    return
-  }
-  console.log("--")
-  items.forEach((item) => {
-    Object.entries(item).forEach(([key, value]) => {
-      if (
-        typeof value === "string" ||
-        typeof value === "number" ||
-        typeof value === "boolean"
-      ) {
-        console.log(`${key}: ${value}`)
-      } else {
-        console.log(`${key}: ${JSON.stringify(value)}`)
-      }
-    })
-    console.log("--")
-  })
-  console.log(`Number of results: ${items.length}`)
-}
 
 const run = async (databaseDirectory) => {
   console.log("Welcome to the search engine coding challenge!")
