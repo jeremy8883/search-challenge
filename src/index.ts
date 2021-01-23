@@ -52,7 +52,15 @@ const printSearchResults = (items: unknown[]) => {
   console.log("--")
   items.forEach((item) => {
     Object.entries(item).forEach(([key, value]) => {
-      console.log(`${key}: ${value}`)
+      if (
+        typeof value === "string" ||
+        typeof value === "number" ||
+        typeof value === "boolean"
+      ) {
+        console.log(`${key}: ${value}`)
+      } else {
+        console.log(`${key}: ${JSON.stringify(value)}`)
+      }
     })
     console.log("--")
   })
