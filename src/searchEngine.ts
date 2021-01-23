@@ -9,7 +9,9 @@ const stringToBoolean = (str: string) => {
 }
 
 const matchesSearch = (value, searchTerm) => {
-  if (typeof value === "string") {
+  if (searchTerm === "") {
+    return value === ""
+  } else if (typeof value === "string") {
     return value.includes(searchTerm)
   } else if (typeof value === "number") {
     return `${value}` === searchTerm

@@ -102,4 +102,27 @@ describe("searchList", () => {
     )
     expect(result).toEqual([])
   })
+
+  it("returns empty fields, if the supplied search term is empty", () => {
+    const result = searchList(
+      [
+        {
+          name: "Fred",
+          country: "Australia",
+        },
+        {
+          name: "Jane",
+          country: "",
+        },
+      ],
+      "country",
+      ""
+    )
+    expect(result).toEqual([
+      {
+        name: "Jane",
+        country: "",
+      },
+    ])
+  })
 })
