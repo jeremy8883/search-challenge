@@ -1,4 +1,4 @@
-import { foo } from "./foo";
+import { foo } from "./foo"
 
 describe("foo", () => {
   it("returns bar", () => {
