@@ -20,14 +20,23 @@ const askForDataFile = async (files: string[]): Promise<string> => {
 }
 
 const askForFieldName = async (fieldNames: string[]): Promise<string> => {
+  let isAborted = false
   const { fieldName } = await prompts({
     type: "autocomplete",
     name: "fieldName",
     message: "Enter field name",
     choices: fieldNames.map((fn) => ({ title: fn, value: fn })),
+    onState: (state) => {
+      isAborted = state.aborted
+    },
   })
-  if (fieldName == null) {
+
+  if (isAborted) {
     throw newError("Cancelled by user", ErrorCode.cancelledByUser)
+  }
+  if (fieldName == null) {
+    console.log("Field name not found")
+    return await askForFieldName(fieldNames)
   }
   return fieldName
 }
@@ -69,7 +78,7 @@ const printSearchResults = (items: unknown[]) => {
 
 const run = async (databaseDirectory) => {
   console.log("Welcome to the search engine coding challenge!")
-  console.log("Press escape at anytime to quit")
+  console.log("Press Ctrl + C to quit")
 
   const files = await readDirectory(databaseDirectory)
   const dataFileName = await askForDataFile(files)

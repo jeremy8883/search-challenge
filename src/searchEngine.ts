@@ -8,7 +8,7 @@ const stringToBoolean = (str: string) => {
       null
 }
 
-const matchesSearch = (value, searchTerm) => {
+const matchesSearch = (value: string, searchTerm: string) => {
   if (searchTerm === "") {
     return value === ""
   } else if (typeof value === "string") {
@@ -20,10 +20,10 @@ const matchesSearch = (value, searchTerm) => {
   }
 }
 
-export const searchList = (
-  items: unknown[],
+export const searchList = <T extends object>(
+  items: T[],
   fieldName: string,
   searchTerm: string
-) => {
+): T[] => {
   return items.filter((item) => matchesSearch(item[fieldName], searchTerm))
 }
