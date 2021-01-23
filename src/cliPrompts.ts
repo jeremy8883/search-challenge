@@ -51,12 +51,12 @@ export const askForSearchTerm = async (): Promise<string> => {
   return searchTerm
 }
 
-export const printSearchResults = (items: unknown[]) => {
+export const printSearchResults = (items: unknown[], log = console.log) => {
   if (!items.length) {
-    console.log("No results found")
+    log("No results found")
     return
   }
-  console.log("--")
+  log("--")
   items.forEach((item) => {
     Object.entries(item).forEach(([key, value]) => {
       if (
@@ -64,12 +64,12 @@ export const printSearchResults = (items: unknown[]) => {
         typeof value === "number" ||
         typeof value === "boolean"
       ) {
-        console.log(`${key}: ${value}`)
+        log(`${key}: ${value}`)
       } else {
-        console.log(`${key}: ${JSON.stringify(value)}`)
+        log(`${key}: ${JSON.stringify(value)}`)
       }
     })
-    console.log("--")
+    log("--")
   })
-  console.log(`Number of results: ${items.length}`)
+  log(`Number of results: ${items.length}`)
 }
