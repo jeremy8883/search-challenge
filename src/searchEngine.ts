@@ -1,4 +1,4 @@
-const stringToBoolean = (str: string) => {
+const stringToBoolean = (str: string): boolean | null => {
   const strLower = str.toLowerCase()
   return strLower === "true" || strLower === "t"
     ? true
@@ -8,7 +8,7 @@ const stringToBoolean = (str: string) => {
       null
 }
 
-const matchesSearch = (value: string, searchTerm: string) => {
+const matchesSearch = (value: string, searchTerm: string): boolean => {
   if (searchTerm === "") {
     return value === ""
   } else if (typeof value === "string") {

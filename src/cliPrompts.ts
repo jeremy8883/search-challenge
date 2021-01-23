@@ -51,7 +51,10 @@ export const askForSearchTerm = async (): Promise<string> => {
   return searchTerm
 }
 
-export const printSearchResults = (items: unknown[], log = console.log) => {
+export const printSearchResults = (
+  items: unknown[],
+  log = console.log
+): void => {
   if (!items.length) {
     log("No results found")
     return

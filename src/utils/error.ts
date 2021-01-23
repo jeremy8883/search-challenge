@@ -4,5 +4,5 @@ export const newError = (
   message: string,
   code: ErrorCode
 ): Error & { code: ErrorCode } => {
-  return Object.assign(new Error(), { code })
+  return Object.assign(new Error(message), { code })
 }

@@ -1,23 +1,23 @@
 import { printSearchResults } from "./cliPrompts"
 
-// This "logSpy" is used to replace the typical `console.log`. It
+// This "logStub" is used to replace the typical `console.log`. It
 // will log each time it gets called. Then it will return those logs
 // as a single, concatenated string when you call `getLog`.
-const createLogSpy = () => {
+const createLogMock = () => {
   let consoleLogs = []
-  const logSpy = (value) => {
+  const logStub = (value) => {
     consoleLogs.push(value)
   }
 
   return {
-    logSpy,
+    logStub,
     getLogs: () => consoleLogs.join("\n"),
   }
 }
 
 describe("printSearchResults", () => {
   it("prints out a list of search results", () => {
-    const { logSpy, getLogs } = createLogSpy()
+    const { logStub, getLogs } = createLogMock()
     printSearchResults(
       [
         {
@@ -31,7 +31,7 @@ describe("printSearchResults", () => {
           isEnrolled: false,
         },
       ],
-      logSpy
+      logStub
     )
     expect(getLogs()).toEqual(
       `--
@@ -48,7 +48,7 @@ Number of results: 2`
   })
 
   it("converts any array or object value to json", () => {
-    const { logSpy, getLogs } = createLogSpy()
+    const { logStub, getLogs } = createLogMock()
     printSearchResults(
       [
         {
@@ -57,7 +57,7 @@ Number of results: 2`
           fizz: { hello: "world" },
         },
       ],
-      logSpy
+      logStub
     )
     expect(getLogs()).toEqual(
       `--
