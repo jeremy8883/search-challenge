@@ -68,4 +68,10 @@ fizz: {"hello":"world"}
 Number of results: 1`
     )
   })
+
+  it("shows a message for when no results are found", () => {
+    const { logStub, getLogs } = createLogMock()
+    printSearchResults([], logStub)
+    expect(getLogs()).toEqual(`No results found`)
+  })
 })

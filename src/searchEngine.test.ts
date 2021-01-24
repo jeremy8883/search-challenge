@@ -125,4 +125,28 @@ describe("searchList", () => {
       },
     ])
   })
+
+  it("searches through array values", () => {
+    const result = searchList(
+      [
+        { tags: ["foo", "bar"] },
+        { tags: ["hello", "world"] },
+        { tags: ["hello", "world"] },
+      ],
+      "tags",
+      "world"
+    )
+    expect(result).toEqual([{ tags: ["hello", "world"] }])
+  })
+
+  // This is an arbitrary rule, given that I was unsure of the requirements for this
+  // challenge.
+  it("searches all values on a nested object", () => {
+    const result = searchList(
+      [{ manager: { name: "John" } }, { manager: { name: "Jane" } }],
+      "manager",
+      "Jane"
+    )
+    expect(result).toEqual([{ manager: { name: "Jane" } }])
+  })
 })
