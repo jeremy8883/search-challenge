@@ -37,7 +37,7 @@ const awaitToContinueFromKeyboard = async (
       `Showing page ${pageNumber}. Press any key for next page, or CTRL+C to exit`,
       { ctrlC: "reject" }
     )
-  } catch (ex) {
+  } catch (error) {
     throw newError("User exited", ErrorCode.cancelledByUser)
   }
 }
@@ -86,9 +86,9 @@ export const showSearchResults = async (
         " out of " +
         dbEntryCount
     )
-  } catch (ex) {
-    ex.code = ErrorCode.searchError
-    throw ex
+  } catch (error) {
+    error.code = ErrorCode.searchError
+    throw error
   } finally {
     if (hideLoader) hideLoader()
   }

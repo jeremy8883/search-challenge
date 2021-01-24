@@ -17,6 +17,7 @@ const normalize = (string: string): string => {
       .toLowerCase()
       // Replace accented characters with their plain equivelants. eg. è becomes e
       .normalize("NFD")
+      // Removes all combining diacritical marks, required for the accents to be removed
       .replace(/[\u0300-\u036f]/g, "")
   )
 }

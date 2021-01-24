@@ -46,16 +46,16 @@ export const loadDatabase = async (
   let data
   try {
     data = await readFile(location, "utf-8")
-  } catch (ex) {
-    ex.code = ErrorCode.ioError
-    throw ex
+  } catch (error) {
+    error.code = ErrorCode.ioError
+    throw error
   }
   let parsedData
   try {
     parsedData = JSON.parse(data)
-  } catch (ex) {
-    ex.code = ErrorCode.invalidJsonData
-    throw ex
+  } catch (error) {
+    error.code = ErrorCode.invalidJsonData
+    throw error
   }
   validateData(parsedData)
   return parsedData as object[] // We've validated the data from the JSON file, so we can safely cast this value
