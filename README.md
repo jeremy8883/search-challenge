@@ -1,4 +1,4 @@
-# Zendesk search coding challenge
+# Search coding challenge
 
 ## Quick start
 
@@ -8,6 +8,12 @@ Ensure that you have [node v14 or higher installed](https://nodejs.org/en/downlo
 npm install
 npm run start
 ``` 
+
+Follow the prompts to search the data files, found under the [`database`](./database) directory.
+
+![](./docs/images/screenshot.png)
+
+## Testing
 
 To run the tests:
 
@@ -23,7 +29,7 @@ npm run test:watch
 
 # Assumptions
 
-* I didn't see `null` values in the data files (although I did see them hidden in some of the description strings), but I figured that this would need to be accounted for. To search for a null value, enter "<<NULL>>" as the search term. The downside with this approach is that if you actually wanted to search for that same string value, you can't. I didn't think it was worth it to revamp the UI for this very rare scenario.
+* I didn't see `null` values in the data files (although I did see them hidden in some of the description strings), but I figured that this would need to be accounted for. To search for a null value, enter `<<NULL>>` as the search term. The downside with this approach is that if you actually wanted to search for that same string value, you can't. I didn't think it was worth it to revamp the UI for this very rare scenario.
 
 * The requirements mention:
 
