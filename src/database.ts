@@ -1,7 +1,20 @@
-import { readFile as readFileFromFileSystem } from "./utils/file"
+import {
+  readDirectory as readDirectoryFromFileSystem,
+  readFile as readFileFromFileSystem,
+} from "./utils/file"
 import { newError } from "./utils/error"
 import { ErrorCode } from "./constants/errorCode"
 import * as R from "ramda"
+
+export const getDataFileNames = async (
+  databaseDirectory: string,
+  readDirectory: (
+    location: string
+  ) => Promise<string[]> = readDirectoryFromFileSystem
+) => {
+  const files = await readDirectory(databaseDirectory)
+  return files.filter((f) => f.toLowerCase().endsWith(".json"))
+}
 
 /**
  * There are certain assumptions that this script makes about the json files that are

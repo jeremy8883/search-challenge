@@ -131,7 +131,7 @@ describe("searchList", () => {
       [
         { tags: ["foo", "bar"] },
         { tags: ["hello", "world"] },
-        { tags: ["hello", "world"] },
+        { tags: ["fiz", "baz"] },
       ],
       "tags",
       "world"
@@ -143,7 +143,11 @@ describe("searchList", () => {
   // challenge.
   it("searches all values on a nested object", () => {
     const result = searchList(
-      [{ manager: { name: "John" } }, { manager: { name: "Jane" } }],
+      [
+        { manager: { name: "John" } },
+        { manager: { name: "Jane" } },
+        { manager: { name: "Julie" } },
+      ],
       "manager",
       "Jane"
     )

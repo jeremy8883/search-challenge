@@ -1,4 +1,3 @@
-import { readDirectory, readJsonFile } from "./utils/file"
 import {
   askForDataFile,
   askForFieldName,
@@ -8,15 +7,15 @@ import {
 import { searchList } from "./searchEngine"
 import { getAllItemKeys } from "./utils/object"
 import { ErrorCode } from "./constants/errorCode"
-import { loadDatabase } from "./database"
+import { getDataFileNames, loadDatabase } from "./database"
 import * as path from "path"
 
 const run = async (databaseDirectory) => {
   console.log("Welcome to the search engine coding challenge!")
   console.log("Press Ctrl + C to quit")
 
-  const files = await readDirectory(databaseDirectory)
-  const dataFileName = await askForDataFile(files)
+  const dataFileNames = await getDataFileNames(databaseDirectory)
+  const dataFileName = await askForDataFile(dataFileNames)
 
   const items = await loadDatabase(path.join(databaseDirectory, dataFileName))
   const allPossibleKeys = getAllItemKeys(items)
