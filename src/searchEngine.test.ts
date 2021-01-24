@@ -48,17 +48,6 @@ describe("searchList", () => {
     expect(result.value).toEqual([])
   })
 
-  it("does a partial search of the field", () => {
-    const iterator = searchList(itemsWithStringValues, "country", "New")
-    const result = iterator.next()
-    expect(result.value).toEqual([
-      {
-        name: "Jane",
-        country: "Papua New Guinea",
-      },
-    ])
-  })
-
   it("returns results for numeric values", () => {
     const iterator = searchList(itemsWithNumericValues, "age", "20")
     const result = iterator.next()

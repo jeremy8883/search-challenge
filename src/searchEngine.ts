@@ -11,10 +11,10 @@ const stringToBoolean = (str: string): boolean | null => {
 }
 
 const matchesSearch = (value: unknown, searchTerm: string): boolean => {
-  if (searchTerm === "") {
-    return value === ""
+  if (searchTerm === null) {
+    return value === null
   } else if (typeof value === "string") {
-    return value.includes(searchTerm)
+    return value === searchTerm
   } else if (typeof value === "number") {
     return `${value}` === searchTerm
   } else if (typeof value === "boolean") {

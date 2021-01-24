@@ -56,7 +56,8 @@ export const askForSearchTerm = async (): Promise<string> => {
   const { searchTerm } = await prompts({
     type: "text",
     name: "searchTerm",
-    message: "Enter search term",
+    message:
+      'Enter search term (enter "true" or "false" for booleans, "null" for null values, or nothing for empty strings)',
   })
   if (searchTerm == null) {
     throw newError("Cancelled by user", ErrorCode.cancelledByUser)
