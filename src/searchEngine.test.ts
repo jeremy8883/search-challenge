@@ -197,4 +197,18 @@ describe("searchList", () => {
     const result = iterator.next()
     expect(result.value).toEqual([{ name: "François" }])
   })
+
+  it("searches for null values", () => {
+    const iterator = searchList(
+      [
+        { id: 1, name: null },
+        // The downside, is that this entry will not get returned. I'm OK with this for now.
+        { id: 2, name: "<<NULL>>" },
+      ],
+      "name",
+      "<<NULL>>"
+    )
+    const result = iterator.next()
+    expect(result.value).toEqual([{ id: 1, name: null }])
+  })
 })

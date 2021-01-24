@@ -25,7 +25,7 @@ const matchesSearch = (
   value: unknown,
   normalizedSearchTerm: string
 ): boolean => {
-  if (normalizedSearchTerm === null) {
+  if (normalizedSearchTerm === "<<null>>") {
     return value === null
   } else if (typeof value === "string") {
     return normalize(value) === normalizedSearchTerm
@@ -43,7 +43,6 @@ const matchesSearch = (
     )
   } else {
     // This covers anything else that we don't support.
-    // eg. we don't search for null values (yet)
     return false
   }
 }
