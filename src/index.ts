@@ -24,7 +24,7 @@ const run = async (databaseDirectory) => {
   const searchTerm = await askForSearchTerm()
 
   const results = searchList(items, fieldName, searchTerm)
-  printSearchResults(results)
+  printSearchResults(results, fieldName, items.length)
 }
 
 ;(async () => {

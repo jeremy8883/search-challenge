@@ -1,6 +1,7 @@
 import prompts from "prompts"
 import { newError } from "./utils/error"
 import { ErrorCode } from "./constants/errorCode"
+import chalk from "chalk"
 
 export const askForDataFile = async (files: string[]): Promise<string> => {
   const { dataFileName } = await prompts({
@@ -53,26 +54,34 @@ export const askForSearchTerm = async (): Promise<string> => {
 
 export const printSearchResults = (
   items: unknown[],
+  fieldName: string,
+  dbEntryCount: number, // The total number of database entries, outside of the search results
   log = console.log
 ): void => {
   if (!items.length) {
-    log("No results found")
+    log(chalk.italic(`No results found out of ${dbEntryCount}`))
     return
   }
-  log("--")
+  log(chalk.gray("--"))
   items.forEach((item) => {
     Object.entries(item).forEach(([key, value]) => {
-      if (
+      const valueToDisplay =
         typeof value === "string" ||
         typeof value === "number" ||
         typeof value === "boolean"
-      ) {
-        log(`${key}: ${value}`)
-      } else {
-        log(`${key}: ${JSON.stringify(value)}`)
-      }
+          ? value
+          : value === null
+          ? // Make it clear, that null is different to a string that happens to equal "null"
+            chalk.bold(`<< ${value} >>`)
+          : JSON.stringify(value)
+      // Highlight the key that the user searched for
+      const keyToDisplay =
+        fieldName === key ? chalk.greenBright.bold(key) : chalk.bold(key)
+      log(`${keyToDisplay}: ${valueToDisplay}`)
     })
-    log("--")
+    log(chalk.gray("--"))
   })
-  log(`Number of results: ${items.length}`)
+  log(
+    chalk.bold(`Number of results: `) + items.length + " out of " + dbEntryCount
+  )
 }
