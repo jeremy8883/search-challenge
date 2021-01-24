@@ -3,6 +3,7 @@ import {
   askForFieldName,
   askForSearchTerm,
   printSearchResults,
+  showLoader,
 } from "./cliPrompts"
 import { searchList } from "./searchEngine"
 import { getAllItemKeys } from "./utils/object"
@@ -17,13 +18,18 @@ const run = async (databaseDirectory) => {
   const dataFileNames = await getDataFileNames(databaseDirectory)
   const dataFileName = await askForDataFile(dataFileNames)
 
+  let hideLoader = showLoader()
   const items = await loadDatabase(path.join(databaseDirectory, dataFileName))
   const allPossibleKeys = getAllItemKeys(items)
+  hideLoader()
+
   const fieldName = await askForFieldName(allPossibleKeys)
 
   const searchTerm = await askForSearchTerm()
 
+  hideLoader = showLoader()
   const results = searchList(items, fieldName, searchTerm)
+  hideLoader()
   printSearchResults(results, fieldName, items.length)
 }
 
