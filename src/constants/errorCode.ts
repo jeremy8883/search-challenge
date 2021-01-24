@@ -1,4 +1,6 @@
 export enum ErrorCode {
   cancelledByUser = "cancelledByUser",
-  invalidInput = "invalidInput",
+  invalidJsonData = "invalidJsonData",
+  ioError = "ioError",
+  searchError = "searchError",
 }

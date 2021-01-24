@@ -116,30 +116,41 @@ export const showSearchResults = async (
   log = console.log,
   awaitToContinue = awaitToContinueFromKeyboard
 ) => {
-  let hideLoader = showLoader()
-  let result = iterator.next()
-  hideLoader()
-  let resultsCount = result.value.length
-  let pageNumber = 1
-
-  if (!result.value.length) {
-    log(chalk.italic(`No results found out of ${dbEntryCount}`))
-    return
-  }
-
-  displayPageResults(result.value, fieldName, log)
-
-  while (!result.done) {
-    await awaitToContinue(pageNumber)
+  let hideLoader
+  try {
     hideLoader = showLoader()
-    result = iterator.next()
+    let result = iterator.next()
     hideLoader()
-    pageNumber++
-    resultsCount += result.value.length
-    displayPageResults(result.value, fieldName, log)
-  }
+    let resultsCount = result.value.length
+    let pageNumber = 1
 
-  log(
-    chalk.bold(`Number of results: `) + resultsCount + " out of " + dbEntryCount
-  )
+    if (!result.value.length) {
+      log(chalk.italic(`No results found out of ${dbEntryCount}`))
+      return
+    }
+
+    displayPageResults(result.value, fieldName, log)
+
+    while (!result.done) {
+      await awaitToContinue(pageNumber)
+      hideLoader = showLoader()
+      result = iterator.next()
+      hideLoader()
+      pageNumber++
+      resultsCount += result.value.length
+      displayPageResults(result.value, fieldName, log)
+    }
+
+    log(
+      chalk.bold(`Number of results: `) +
+        resultsCount +
+        " out of " +
+        dbEntryCount
+    )
+  } catch (ex) {
+    ex.code = ErrorCode.searchError
+    throw ex
+  } finally {
+    if (hideLoader) hideLoader()
+  }
 }

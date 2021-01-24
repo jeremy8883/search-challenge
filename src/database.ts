@@ -24,12 +24,15 @@ const validateData = (data: unknown): void => {
   if (!Array.isArray(data)) {
     throw newError(
       "JSON database file must be an array",
-      ErrorCode.invalidInput
+      ErrorCode.invalidJsonData
     )
   }
   const nonObjectItem = data.find((item) => !R.is(Object, item))
   if (nonObjectItem) {
-    throw newError("Array entries must all be objects", ErrorCode.invalidInput)
+    throw newError(
+      "JSON array entries must all be objects",
+      ErrorCode.invalidJsonData
+    )
   }
 }
 
@@ -40,8 +43,20 @@ export const loadDatabase = async (
     type: string
   ) => Promise<string> = readFileFromFileSystem
 ): Promise<object[]> => {
-  const data = await readFile(location, "utf-8")
-  const parsedData = JSON.parse(data)
+  let data
+  try {
+    data = await readFile(location, "utf-8")
+  } catch (ex) {
+    ex.code = ErrorCode.ioError
+    throw ex
+  }
+  let parsedData
+  try {
+    parsedData = JSON.parse(data)
+  } catch (ex) {
+    ex.code = ErrorCode.invalidJsonData
+    throw ex
+  }
   validateData(parsedData)
   return parsedData as object[] // We've validated the data from the JSON file, so we can safely cast this value
 }
