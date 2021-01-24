@@ -177,4 +177,24 @@ describe("searchList", () => {
     result = iterator.next()
     expect(result.value).toEqual([{ id: 6, name: "Julie" }])
   })
+
+  it("is case insensitive", () => {
+    const iterator = searchList(
+      [{ name: "John" }, { name: "Jane" }],
+      "name",
+      "JOHN"
+    )
+    const result = iterator.next()
+    expect(result.value).toEqual([{ name: "John" }])
+  })
+
+  it("normalizes accented characters", () => {
+    const iterator = searchList(
+      [{ name: "François" }, { name: "Jane" }],
+      "name",
+      "Francois"
+    )
+    const result = iterator.next()
+    expect(result.value).toEqual([{ name: "François" }])
+  })
 })
