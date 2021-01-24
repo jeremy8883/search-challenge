@@ -3,6 +3,7 @@ import { newError } from "./utils/error"
 import { ErrorCode } from "./constants/errorCode"
 import chalk from "chalk"
 import { Spinner } from "cli-spinner"
+import pressAnyKey from "press-any-key"
 
 export const askForDataFile = async (files: string[]): Promise<string> => {
   const { dataFileName } = await prompts({
@@ -63,17 +64,11 @@ export const askForSearchTerm = async (): Promise<string> => {
   return searchTerm
 }
 
-export const printSearchResults = (
+const displayPageResults = (
   items: unknown[],
   fieldName: string,
-  dbEntryCount: number, // The total number of database entries, outside of the search results
   log = console.log
 ): void => {
-  if (!items.length) {
-    log(chalk.italic(`No results found out of ${dbEntryCount}`))
-    return
-  }
-  log(chalk.gray("--"))
   items.forEach((item) => {
     Object.entries(item).forEach(([key, value]) => {
       const valueToDisplay =
@@ -92,7 +87,54 @@ export const printSearchResults = (
     })
     log(chalk.gray("--"))
   })
+}
+
+const awaitForNextPageFromKeyboard = async (
+  pageNumber: number
+): Promise<void> => {
+  try {
+    await pressAnyKey(
+      `Showing page ${pageNumber}. Press any key for next page, or CTRL+C to exit`,
+      { ctrlC: "reject" }
+    )
+  } catch (ex) {
+    throw newError("User exited", ErrorCode.cancelledByUser)
+  }
+}
+
+/**
+ * Shows a paginated list of the search results.
+ * To allow for pagination, it will call the passed in iterator, one call at a time.
+ * To proceed to the next call, the user must press any key.
+ * The user may also cancel the search iteration by pressing "ctrl + c"
+ */
+export const showSearchResults = async (
+  iterator: Generator<object[], object[]>,
+  fieldName: string,
+  dbEntryCount: number, // The total number of database entries, outside of the search results
+  log = console.log,
+  awaitForNextPage = awaitForNextPageFromKeyboard
+) => {
+  let result = iterator.next()
+  let resultsCount = result.value.length
+  let pageNumber = 1
+
+  if (!result.value.length) {
+    log(chalk.italic(`No results found out of ${dbEntryCount}`))
+    return
+  }
+
+  displayPageResults(result.value, fieldName, log)
+
+  while (!result.done) {
+    await awaitForNextPage(pageNumber)
+    result = iterator.next()
+    pageNumber++
+    resultsCount += result.value.length
+    displayPageResults(result.value, fieldName, log)
+  }
+
   log(
-    chalk.bold(`Number of results: `) + items.length + " out of " + dbEntryCount
+    chalk.bold(`Number of results: `) + resultsCount + " out of " + dbEntryCount
   )
 }

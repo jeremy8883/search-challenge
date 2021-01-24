@@ -30,10 +30,23 @@ const matchesSearch = (value: unknown, searchTerm: string): boolean => {
   }
 }
 
-export const searchList = <T extends object>(
+// Searches through a list of items. It will yield 10 results at a time.
+export function* searchList<T extends object>(
   items: T[],
   fieldName: string,
-  searchTerm: string
-): T[] => {
-  return items.filter((item) => matchesSearch(item[fieldName], searchTerm))
+  searchTerm: string,
+  pageSize = 10
+): Generator<T[], T[]> {
+  let pageItems = []
+  for (const item of items) {
+    if (matchesSearch(item[fieldName], searchTerm)) {
+      pageItems.push(item)
+
+      if (pageItems.length === pageSize) {
+        yield pageItems
+        pageItems = []
+      }
+    }
+  }
+  return pageItems
 }

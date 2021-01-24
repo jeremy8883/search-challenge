@@ -27,8 +27,9 @@ describe("searchList", () => {
   ]
 
   it("searches the list of results", () => {
-    const result = searchList(itemsWithStringValues, "country", "Australia")
-    expect(result).toEqual([
+    const iterator = searchList(itemsWithStringValues, "country", "Australia")
+    const result = iterator.next()
+    expect(result.value).toEqual([
       {
         name: "Fred",
         country: "Australia",
@@ -42,13 +43,15 @@ describe("searchList", () => {
 
   it("does not return results for the different fields", () => {
     // ie. there ar no entries with the "name" "Australia", it is a "country".
-    const result = searchList(itemsWithStringValues, "name", "Australia")
-    expect(result).toEqual([])
+    const iterator = searchList(itemsWithStringValues, "name", "Australia")
+    const result = iterator.next()
+    expect(result.value).toEqual([])
   })
 
   it("does a partial search of the field", () => {
-    const result = searchList(itemsWithStringValues, "country", "New")
-    expect(result).toEqual([
+    const iterator = searchList(itemsWithStringValues, "country", "New")
+    const result = iterator.next()
+    expect(result.value).toEqual([
       {
         name: "Jane",
         country: "Papua New Guinea",
@@ -57,8 +60,9 @@ describe("searchList", () => {
   })
 
   it("returns results for numeric values", () => {
-    const result = searchList(itemsWithNumericValues, "age", "20")
-    expect(result).toEqual([
+    const iterator = searchList(itemsWithNumericValues, "age", "20")
+    const result = iterator.next()
+    expect(result.value).toEqual([
       {
         name: "Jane",
         age: 20,
@@ -68,13 +72,15 @@ describe("searchList", () => {
 
   it("does not return results for partial numeric matches", () => {
     // ie. "2" is part of "20", but returning that search result would be unexpected
-    const result = searchList(itemsWithNumericValues, "age", "2")
-    expect(result).toEqual([])
+    const iterator = searchList(itemsWithNumericValues, "age", "2")
+    const result = iterator.next()
+    expect(result.value).toEqual([])
   })
 
   it("returns results for boolean values", () => {
-    const result = searchList(itemsWithBooleanValues, "isRegistered", "True")
-    expect(result).toEqual([
+    const iterator = searchList(itemsWithBooleanValues, "isRegistered", "True")
+    const result = iterator.next()
+    expect(result.value).toEqual([
       {
         name: "Jane",
         isRegistered: true,
@@ -83,8 +89,9 @@ describe("searchList", () => {
   })
 
   it("returns results for boolean values", () => {
-    const result = searchList(itemsWithBooleanValues, "isRegistered", "False")
-    expect(result).toEqual([
+    const iterator = searchList(itemsWithBooleanValues, "isRegistered", "False")
+    const result = iterator.next()
+    expect(result.value).toEqual([
       {
         name: "John",
         isRegistered: false,
@@ -95,16 +102,17 @@ describe("searchList", () => {
   it("ignores any invalid input", () => {
     // We should probably show something to the user saying that the boolean value is invalid,
     // but for this coding challenge, I think it's ok
-    const result = searchList(
+    const iterator = searchList(
       itemsWithBooleanValues,
       "isRegistered",
       "gibberish"
     )
-    expect(result).toEqual([])
+    const result = iterator.next()
+    expect(result.value).toEqual([])
   })
 
   it("returns empty fields, if the supplied search term is empty", () => {
-    const result = searchList(
+    const iterator = searchList(
       [
         {
           name: "Fred",
@@ -118,7 +126,8 @@ describe("searchList", () => {
       "country",
       ""
     )
-    expect(result).toEqual([
+    const result = iterator.next()
+    expect(result.value).toEqual([
       {
         name: "Jane",
         country: "",
@@ -127,7 +136,7 @@ describe("searchList", () => {
   })
 
   it("searches through array values", () => {
-    const result = searchList(
+    const iterator = searchList(
       [
         { tags: ["foo", "bar"] },
         { tags: ["hello", "world"] },
@@ -136,13 +145,14 @@ describe("searchList", () => {
       "tags",
       "world"
     )
-    expect(result).toEqual([{ tags: ["hello", "world"] }])
+    const result = iterator.next()
+    expect(result.value).toEqual([{ tags: ["hello", "world"] }])
   })
 
   // This is an arbitrary rule, given that I was unsure of the requirements for this
   // challenge.
   it("searches all values on a nested object", () => {
-    const result = searchList(
+    const iterator = searchList(
       [
         { manager: { name: "John" } },
         { manager: { name: "Jane" } },
@@ -151,6 +161,31 @@ describe("searchList", () => {
       "manager",
       "Jane"
     )
-    expect(result).toEqual([{ manager: { name: "Jane" } }])
+    const result = iterator.next()
+    expect(result.value).toEqual([{ manager: { name: "Jane" } }])
+  })
+
+  it("can return multiple pages", () => {
+    const iterator = searchList(
+      [
+        { id: 1, name: "John" },
+        { id: 2, name: "Jane" },
+        { id: 3, name: "Julie" },
+        { id: 4, name: "Julie" },
+        { id: 5, name: "Jason" },
+        { id: 6, name: "Julie" },
+      ],
+      "name",
+      "Julie",
+      2
+    )
+    let result = iterator.next()
+    expect(result.value).toEqual([
+      { id: 3, name: "Julie" },
+      { id: 4, name: "Julie" },
+    ])
+
+    result = iterator.next()
+    expect(result.value).toEqual([{ id: 6, name: "Julie" }])
   })
 })

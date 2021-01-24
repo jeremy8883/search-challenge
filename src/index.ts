@@ -2,8 +2,8 @@ import {
   askForDataFile,
   askForFieldName,
   askForSearchTerm,
-  printSearchResults,
   showLoader,
+  showSearchResults,
 } from "./cliPrompts"
 import { searchList } from "./searchEngine"
 import { getAllItemKeys } from "./utils/object"
@@ -18,7 +18,7 @@ const run = async (databaseDirectory) => {
   const dataFileNames = await getDataFileNames(databaseDirectory)
   const dataFileName = await askForDataFile(dataFileNames)
 
-  let hideLoader = showLoader()
+  const hideLoader = showLoader()
   const items = await loadDatabase(path.join(databaseDirectory, dataFileName))
   const allPossibleKeys = getAllItemKeys(items)
   hideLoader()
@@ -27,10 +27,11 @@ const run = async (databaseDirectory) => {
 
   const searchTerm = await askForSearchTerm()
 
-  hideLoader = showLoader()
-  const results = searchList(items, fieldName, searchTerm)
-  hideLoader()
-  printSearchResults(results, fieldName, items.length)
+  await showSearchResults(
+    searchList(items, fieldName, searchTerm),
+    fieldName,
+    items.length
+  )
 }
 
 ;(async () => {
@@ -41,7 +42,7 @@ const run = async (databaseDirectory) => {
     // Sometimes the escape key also triggers this, but I found some inconsistencies
     // with the `prompts` library that we're using.
     if (error.code === ErrorCode.cancelledByUser) {
-      console.log("Goodbye!")
+      console.log("Goodbye! 👋")
     } else {
       console.error("An error occurred:")
       console.error(error)
