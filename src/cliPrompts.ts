@@ -24,7 +24,7 @@ export const showLoader = () => {
   spinner.start()
 
   return () => {
-    spinner.stop()
+    spinner.stop(true)
   }
 }
 
@@ -90,7 +90,7 @@ const displayPageResults = (
   })
 }
 
-const awaitForNextPageFromKeyboard = async (
+const awaitToContinueFromKeyboard = async (
   pageNumber: number
 ): Promise<void> => {
   try {
@@ -114,9 +114,11 @@ export const showSearchResults = async (
   fieldName: string,
   dbEntryCount: number, // The total number of database entries, outside of the search results
   log = console.log,
-  awaitForNextPage = awaitForNextPageFromKeyboard
+  awaitToContinue = awaitToContinueFromKeyboard
 ) => {
+  let hideLoader = showLoader()
   let result = iterator.next()
+  hideLoader()
   let resultsCount = result.value.length
   let pageNumber = 1
 
@@ -128,8 +130,10 @@ export const showSearchResults = async (
   displayPageResults(result.value, fieldName, log)
 
   while (!result.done) {
-    await awaitForNextPage(pageNumber)
+    await awaitToContinue(pageNumber)
+    hideLoader = showLoader()
     result = iterator.next()
+    hideLoader()
     pageNumber++
     resultsCount += result.value.length
     displayPageResults(result.value, fieldName, log)

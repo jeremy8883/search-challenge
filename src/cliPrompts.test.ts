@@ -123,7 +123,7 @@ Number of results: 1 out of 5`
     // This stubs the function that awaits for the user to press any key to proceed.
     // For the tests, instead, we'll take note of the log so far, and check the result
     // later.
-    const awaitForInputStub = () => {
+    const awaitToContinueStub = () => {
       firstPage = getLogs()
       return Promise.resolve(undefined)
     }
@@ -136,7 +136,7 @@ Number of results: 1 out of 5`
       "name",
       5,
       logStub,
-      awaitForInputStub
+      awaitToContinueStub
     )
     expect(firstPage).toEqual(`name: John Smith
 --
