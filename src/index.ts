@@ -1,9 +1,4 @@
-import {
-  askForDataFile,
-  askForFieldName,
-  askForSearchTerm,
-  showLoader,
-} from "./cliPrompts"
+import { askForDataFile, askForFieldName, askForSearchTerm } from "./cliInitialPrompts"
 import { searchList } from "./searchEngine"
 import { getAllItemKeys } from "./utils/object"
 import { ErrorCode } from "./constants/errorCode"
@@ -11,6 +6,7 @@ import { getDataFileNames, loadDatabase } from "./database"
 import * as path from "path"
 import chalk from "chalk"
 import { showSearchResults } from "./cliSearchResults"
+import { showLoader } from "./utils/cli"
 
 const run = async (databaseDirectory) => {
   console.log("Welcome to the search engine coding challenge!")

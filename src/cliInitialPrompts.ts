@@ -1,7 +1,8 @@
 import prompts from "prompts"
 import { newError } from "./utils/error"
 import { ErrorCode } from "./constants/errorCode"
-import { Spinner } from "cli-spinner"
+
+// This file includes the functions that ask the user the initial questions
 
 export const askForDataFile = async (files: string[]): Promise<string> => {
   const { dataFileName } = await prompts({
@@ -14,16 +15,6 @@ export const askForDataFile = async (files: string[]): Promise<string> => {
     throw newError("Cancelled by user", ErrorCode.cancelledByUser)
   }
   return dataFileName
-}
-
-export const showLoader = () => {
-  const spinner = new Spinner("Processing.. %s")
-  spinner.setSpinnerString("|/-\\")
-  spinner.start()
-
-  return () => {
-    spinner.stop(true)
-  }
 }
 
 export const askForFieldName = async (

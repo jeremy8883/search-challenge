@@ -1,7 +1,8 @@
 import chalk from "chalk"
 import { newError } from "./utils/error"
 import { ErrorCode } from "./constants/errorCode"
-import { showLoader } from "./cliPrompts"
+import { showLoader } from "./utils/cli"
+import pressAnyKey from "press-any-key"
 
 const displayPageResults = (
   items: unknown[],
