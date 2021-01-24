@@ -1,5 +1,5 @@
 import stripAnsi from "strip-ansi"
-import { showSearchResults } from "./cliPrompts"
+import { showSearchResults } from "./cliSearchResults"
 import chalk from "chalk"
 
 // This "logStub" is used to replace the typical `console.log`. It
