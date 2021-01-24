@@ -23,7 +23,7 @@ npm run test:watch
 
 # Assumptions
 
-* I didn't see `null` values in the data files (although I did see them hidden in some of the description strings 😛), but I figured that this would need to be accounted for. To search for a null value, enter "<<NULL>>" as the search term. The downside with this approach is that if you actually wanted to search for that same string value, you can't. I didn't think it was worth it to revamp the UI for this very rare scenario.
+* I didn't see `null` values in the data files (although I did see them hidden in some of the description strings), but I figured that this would need to be accounted for. To search for a null value, enter "<<NULL>>" as the search term. The downside with this approach is that if you actually wanted to search for that same string value, you can't. I didn't think it was worth it to revamp the UI for this very rare scenario.
 
 * The requirements mention:
 
