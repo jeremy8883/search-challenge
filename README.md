@@ -43,6 +43,8 @@ I didn't see `null` values in the data files (although I did see them hidden in 
 
 I also didn't see any nested objects in the sample data. I handle these anyway, by simply doing a search on every value of a nested object.
 
+I didn't add in a way on how to search for entries that do not have the search key in the list entry. Although you can search for empty values as requested, simply press enter when asked for the search term. 
+
 ## Performance and Scalability
 
 The script actually loads the entire JSON object into memory up front. It also scans the entire file before prompting for the field name, as so it can supply the results for the field name autocomplete.

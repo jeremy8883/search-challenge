@@ -226,4 +226,15 @@ describe("searchList", () => {
       iterator.next()
     }).toThrowError()
   })
+
+  it("safely ignores entries where the key does not exist in the entry", () => {
+    const iterator = searchList(
+      [{ name: "Jane", age: 20 }, { name: "John" }],
+      "age",
+      "20"
+    )
+
+    const result = iterator.next()
+    expect(result.value).toEqual([{ name: "Jane", age: 20 }])
+  })
 })

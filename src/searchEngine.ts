@@ -48,7 +48,8 @@ const matchesSearch = (
   } else {
     // Hopefully this never happens. We should have covered
     // all json data types. Maybe a function got inserted into the data
-    // file by accident, somewhere else in the code.
+    // file by accident, somewhere else in the code. Or maybe this
+    // function was called with the value being `undefined`.
     throw newError(`Unsupported data type ${value}`, ErrorCode.invalidJsonData)
   }
 }
@@ -72,7 +73,11 @@ export function* searchList<T extends object>(
   let pageItems = []
   const normalizedSearchTerm = normalize(searchTerm)
   for (const item of items) {
-    if (matchesSearch(item[itemKey], normalizedSearchTerm)) {
+    if (
+      // Ignore entries where the property does not exist
+      item.hasOwnProperty(itemKey) &&
+      matchesSearch(item[itemKey], normalizedSearchTerm)
+    ) {
       pageItems.push(item)
 
       if (pageItems.length === pageSize) {
