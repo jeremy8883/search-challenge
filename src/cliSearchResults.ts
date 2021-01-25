@@ -30,7 +30,7 @@ const displayPageResults = (
 ): void => {
   items.forEach((item) => {
     Object.entries(item).forEach(([key, value]) => {
-      log(`${getValueToDisplay(value)}: ${getKeyToDisplay(itemKey, key)}`)
+      log(`${getKeyToDisplay(key, itemKey)}: ${getValueToDisplay(value)}`)
     })
     log(chalk.gray("--"))
   })
