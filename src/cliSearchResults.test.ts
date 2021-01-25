@@ -65,7 +65,7 @@ name: Jane Smith
 age: 45
 isEnrolled: false
 --
-Number of results: 2 out of 5`
+Number of results: 2, Entries scanned: 5`
     )
   })
 
@@ -90,14 +90,14 @@ Number of results: 2 out of 5`
 tags: ["foo","bar"]
 fizz: {"hello":"world"}
 --
-Number of results: 1 out of 5`
+Number of results: 1, Entries scanned: 5`
     )
   })
 
   it("shows a message for when no results are found", async () => {
     const { logStub, getLogs } = createLogMock()
     await showSearchResults(createIterator([[]]), "name", 5, logStub)
-    expect(getLogs()).toEqual(`No results found out of 5`)
+    expect(getLogs()).toEqual(`No results found out of 5 entries`)
   })
 
   it("bolds any null values", async () => {
@@ -151,6 +151,6 @@ name: Jason Smith
 --
 name: Janet Smith
 --
-Number of results: 4 out of 5`)
+Number of results: 4, Entries scanned: 5`)
   })
 })

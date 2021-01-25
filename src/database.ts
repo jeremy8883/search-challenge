@@ -16,10 +16,6 @@ export const getDataFileNames = async (
   return files.filter((f) => f.toLowerCase().endsWith(".json"))
 }
 
-/**
- * There are certain assumptions that this script makes about the json files that are
- * read. This function validates these assumptions.
- */
 const validateData = (data: unknown): void => {
   if (!Array.isArray(data)) {
     throw newError(
@@ -36,6 +32,12 @@ const validateData = (data: unknown): void => {
   }
 }
 
+/**
+ * Loads the JSON file, and runs a validation on it.
+ * It makes sure that the JSON file is a single array, and it makes sure that
+ * every entry is an object. If this criteria is not met, a `invalidJsonData`
+ * exception is thrown.
+ */
 export const loadDatabase = async (
   location: string,
   readFile: (

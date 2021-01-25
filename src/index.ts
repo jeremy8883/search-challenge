@@ -1,4 +1,8 @@
-import { askForDataFile, askForFieldName, askForSearchTerm } from "./cliInitialPrompts"
+import {
+  askForDataFileName,
+  askForItemKey,
+  askForSearchTerm,
+} from "./cliInitialPrompts"
 import { searchList } from "./searchEngine"
 import { getAllItemKeys } from "./utils/object"
 import { ErrorCode } from "./constants/errorCode"
@@ -16,20 +20,20 @@ const run = async (databaseDirectory) => {
 
   try {
     const dataFileNames = await getDataFileNames(databaseDirectory)
-    const dataFileName = await askForDataFile(dataFileNames)
+    const dataFileName = await askForDataFileName(dataFileNames)
 
     hideLoader = showLoader()
     const items = await loadDatabase(path.join(databaseDirectory, dataFileName))
     const allPossibleKeys = getAllItemKeys(items)
     hideLoader()
 
-    const fieldName = await askForFieldName(allPossibleKeys)
+    const itemKey = await askForItemKey(allPossibleKeys)
 
     const searchTerm = await askForSearchTerm()
 
     await showSearchResults(
-      searchList(items, fieldName, searchTerm),
-      fieldName,
+      searchList(items, itemKey, searchTerm),
+      itemKey,
       items.length
     )
   } finally {

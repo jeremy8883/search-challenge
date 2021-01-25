@@ -211,4 +211,19 @@ describe("searchList", () => {
     const result = iterator.next()
     expect(result.value).toEqual([{ id: 1, name: null }])
   })
+
+  it("throws an error if unexpected value types are found", () => {
+    const iterator = searchList(
+      [
+        { name: "Jane" },
+        { name: () => {} }, // Function values are not supported
+      ],
+      "name",
+      "Jane"
+    )
+
+    expect(() => {
+      iterator.next()
+    }).toThrowError()
+  })
 })

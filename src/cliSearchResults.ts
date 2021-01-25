@@ -4,26 +4,33 @@ import { ErrorCode } from "./constants/errorCode"
 import { showLoader } from "./utils/cli"
 import pressAnyKey from "press-any-key"
 
+const getValueToDisplay = (value: string): string => {
+  if (
+    typeof value === "string" ||
+    typeof value === "number" ||
+    typeof value === "boolean"
+  )
+    return value
+  // Make it clear, that null is different to a string that happens to equal "null"
+  if (value === null) {
+    return chalk.bold(`<< ${value} >>`)
+  }
+  return JSON.stringify(value)
+}
+
+const getKeyToDisplay = (key: string, searchItemKey: string): string => {
+  // Highlight the key that the user searched for
+  return key === searchItemKey ? chalk.greenBright.bold(key) : chalk.bold(key)
+}
+
 const displayPageResults = (
   items: unknown[],
-  fieldName: string,
+  itemKey: string,
   log = console.log
 ): void => {
   items.forEach((item) => {
     Object.entries(item).forEach(([key, value]) => {
-      const valueToDisplay =
-        typeof value === "string" ||
-        typeof value === "number" ||
-        typeof value === "boolean"
-          ? value
-          : value === null
-          ? // Make it clear, that null is different to a string that happens to equal "null"
-            chalk.bold(`<< ${value} >>`)
-          : JSON.stringify(value)
-      // Highlight the key that the user searched for
-      const keyToDisplay =
-        fieldName === key ? chalk.greenBright.bold(key) : chalk.bold(key)
-      log(`${keyToDisplay}: ${valueToDisplay}`)
+      log(`${getValueToDisplay(value)}: ${getKeyToDisplay(itemKey, key)}`)
     })
     log(chalk.gray("--"))
   })
@@ -50,7 +57,7 @@ const awaitToContinueFromKeyboard = async (
  */
 export const showSearchResults = async (
   iterator: Generator<object[], object[]>,
-  fieldName: string,
+  itemKey: string,
   dbEntryCount: number, // The total number of database entries, outside of the search results
   log = console.log,
   awaitToContinue = awaitToContinueFromKeyboard
@@ -64,12 +71,17 @@ export const showSearchResults = async (
     let pageNumber = 1
 
     if (!result.value.length) {
-      log(chalk.italic(`No results found out of ${dbEntryCount}`))
+      log(chalk.italic(`No results found out of ${dbEntryCount} entries`))
       return
     }
 
-    displayPageResults(result.value, fieldName, log)
+    displayPageResults(result.value, itemKey, log)
 
+    // If there are more results, await the user to press any key.
+    // Then display the next page.
+    // There's one bug, where if there are 10 results, and we're displaying 10 entries
+    // at a time, we'll unnecessarily ask the user to press a key. I didn't get around
+    // to fixing this.
     while (!result.done) {
       await awaitToContinue(pageNumber)
       hideLoader = showLoader()
@@ -77,13 +89,13 @@ export const showSearchResults = async (
       hideLoader()
       pageNumber++
       resultsCount += result.value.length
-      displayPageResults(result.value, fieldName, log)
+      displayPageResults(result.value, itemKey, log)
     }
 
     log(
       chalk.bold(`Number of results: `) +
         resultsCount +
-        " out of " +
+        ", Entries scanned: " +
         dbEntryCount
     )
   } catch (error) {

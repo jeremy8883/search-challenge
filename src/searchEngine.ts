@@ -1,4 +1,7 @@
 import * as R from "ramda"
+import { newError } from "./utils/error"
+import { ErrorCode } from "./constants/errorCode"
+import { isPlainObject } from "is-plain-object"
 
 const stringToBoolean = (str: string): boolean | null => {
   const strLower = str.toLowerCase()
@@ -38,27 +41,38 @@ const matchesSearch = (
     return (value as unknown[]).some((item) =>
       matchesSearch(item, normalizedSearchTerm)
     )
-  } else if (R.is(Object, value)) {
+  } else if (isPlainObject(value)) {
     return Object.values(value).some((item) =>
       matchesSearch(item, normalizedSearchTerm)
     )
   } else {
-    // This covers anything else that we don't support.
-    return false
+    // Hopefully this never happens. We should have covered
+    // all json data types. Maybe a function got inserted into the data
+    // file by accident, somewhere else in the code.
+    throw newError(`Unsupported data type ${value}`, ErrorCode.invalidJsonData)
   }
 }
 
-// Searches through a list of items. It will yield 10 results at a time.
+/**
+ * A generator function that searches through a list of items. It will yield 10
+ * results at a time.
+ *
+ * Search results are normalized, so it's case insensitive, whitespace is trimmed,
+ * and it's accent insensitive.
+ *
+ * To search for null, use `<<NULL>>` for the search term. For booleans, use
+ * `true` or `false`
+ */
 export function* searchList<T extends object>(
   items: T[],
-  fieldName: string,
+  itemKey: string,
   searchTerm: string,
   pageSize = 10
 ): Generator<T[], T[]> {
   let pageItems = []
   const normalizedSearchTerm = normalize(searchTerm)
   for (const item of items) {
-    if (matchesSearch(item[fieldName], normalizedSearchTerm)) {
+    if (matchesSearch(item[itemKey], normalizedSearchTerm)) {
       pageItems.push(item)
 
       if (pageItems.length === pageSize) {

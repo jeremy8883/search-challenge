@@ -2,9 +2,10 @@ import prompts from "prompts"
 import { newError } from "./utils/error"
 import { ErrorCode } from "./constants/errorCode"
 
-// This file includes the functions that ask the user the initial questions
+// This file includes the functions that ask the user the initial questions,
+// and returns those answers
 
-export const askForDataFile = async (files: string[]): Promise<string> => {
+export const askForDataFileName = async (files: string[]): Promise<string> => {
   const { dataFileName } = await prompts({
     type: "select",
     name: "dataFileName",
@@ -17,15 +18,13 @@ export const askForDataFile = async (files: string[]): Promise<string> => {
   return dataFileName
 }
 
-export const askForFieldName = async (
-  fieldNames: string[]
-): Promise<string> => {
+export const askForItemKey = async (itemKeys: string[]): Promise<string> => {
   let isAborted = false
-  const { fieldName } = await prompts({
+  const { itemKey } = await prompts({
     type: "autocomplete",
-    name: "fieldName",
+    name: "itemKey",
     message: "Enter field name",
-    choices: fieldNames.map((fn) => ({ title: fn, value: fn })),
+    choices: itemKeys.map((fn) => ({ title: fn, value: fn })),
     onState: (state) => {
       isAborted = state.aborted
     },
@@ -34,11 +33,11 @@ export const askForFieldName = async (
   if (isAborted) {
     throw newError("Cancelled by user", ErrorCode.cancelledByUser)
   }
-  if (fieldName == null) {
+  if (itemKey == null) {
     console.log("Field name not found")
-    return await askForFieldName(fieldNames)
+    return await askForItemKey(itemKeys)
   }
-  return fieldName
+  return itemKey
 }
 
 export const askForSearchTerm = async (): Promise<string> => {
