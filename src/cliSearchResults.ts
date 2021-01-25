@@ -70,6 +70,7 @@ export const showSearchResults = async (
     let resultsCount = result.value.length
     let pageNumber = 1
 
+    log(chalk.gray("----"))
     if (!result.value.length) {
       log(chalk.italic(`No results found out of ${dbEntryCount} entries`))
       return

@@ -53,7 +53,7 @@ The script actually loads the entire JSON object into memory up front. It also s
 
 In the challenge requirements, it uses 10,000+ users as an example to test. I've tested the solution with 877,500 users, at 470MB. It takes ~4580ms for the file to read into memory, and for it to query all of the possible fields. Then for the actual search of results, because everything is in memory, it only takes ~360ms.
 
-For larger files however, I get an error, `Cannot create a string longer than 0x1fffffe8 characters`. To fix this, I would need to update the script to scan the JSON file in buffered increments, and remove the field name autocompletion. I might be able to use the [JSONStream library](https://www.npmjs.com/package/JSONStream) for this.
+For larger files however, I get an error, `Cannot create a string longer than 0x1fffffe8 characters`. To fix this, I would need to update the script to scan the JSON file in buffered increments, and remove the field name autocompletion. I might be able to use [stream-json](https://www.npmjs.com/package/stream-json) for this.
 
 To ensure that that the UX will act gracefully. I've added a loading animation for any potentially long process. Although, the loading spinner will actually freeze if the synchronous processes take long enough. To solve this issue, I'd need to convert the `getAllItemKeys` and `showSearchResults` functions into web workers. I assumed that this would be going outside of scope.
 
