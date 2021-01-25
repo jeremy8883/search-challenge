@@ -99,7 +99,9 @@ export const showSearchResults = async (
         dbEntryCount
     )
   } catch (error) {
-    error.code = ErrorCode.searchError
+    if (error.code == null) {
+      error.code = ErrorCode.searchError
+    }
     throw error
   } finally {
     if (hideLoader) hideLoader()
