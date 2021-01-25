@@ -31,6 +31,11 @@ const matchesSearch = (
 ): boolean => {
   if (normalizedSearchTerm === "<<null>>") {
     return value === null
+  } else if (normalizedSearchTerm === "<<undefined>>") {
+    // ie. the object key was not found in the list entry
+    return value === undefined
+  } else if (value == null) {
+    return false
   } else if (typeof value === "string") {
     return normalize(value) === normalizedSearchTerm
   } else if (typeof value === "number") {
@@ -48,8 +53,7 @@ const matchesSearch = (
   } else {
     // Hopefully this never happens. We should have covered
     // all json data types. Maybe a function got inserted into the data
-    // file by accident, somewhere else in the code. Or maybe this
-    // function was called with the value being `undefined`.
+    // file by accident, somewhere else in the code.
     throw newError(`Unsupported data type ${value}`, ErrorCode.invalidJsonData)
   }
 }
@@ -73,11 +77,7 @@ export function* searchList<T extends object>(
   let pageItems = []
   const normalizedSearchTerm = normalize(searchTerm)
   for (const item of items) {
-    if (
-      // Ignore entries where the property does not exist
-      item.hasOwnProperty(itemKey) &&
-      matchesSearch(item[itemKey], normalizedSearchTerm)
-    ) {
+    if (matchesSearch(item[itemKey], normalizedSearchTerm)) {
       pageItems.push(item)
 
       if (pageItems.length === pageSize) {

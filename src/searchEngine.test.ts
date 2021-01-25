@@ -212,6 +212,16 @@ describe("searchList", () => {
     expect(result.value).toEqual([{ id: 1, name: null }])
   })
 
+  it("searches for undefined values", () => {
+    const iterator = searchList(
+      [{ name: "Jane", age: 20 }, { name: "John" }],
+      "age",
+      "<<UNDEFINED>>"
+    )
+    const result = iterator.next()
+    expect(result.value).toEqual([{ name: "John" }])
+  })
+
   it("throws an error if unexpected value types are found", () => {
     const iterator = searchList(
       [

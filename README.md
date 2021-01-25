@@ -41,6 +41,8 @@ I have at least done some normalization, so the search terms are case-insensitiv
 
 I didn't see `null` values in the data files (although I did see them hidden in some of the description strings), but I figured that this would need to be accounted for. To search for a null value, enter `<<NULL>>` as the search term. The downside with this approach is that if you actually wanted to search for that same string value, you can't. I didn't think it was worth it to revamp the UI for this coding challenge, but for any real production app, I would.
 
+You can also search for `<<UNDEFINED>>` to search for missing object keys.
+
 I also didn't see any nested objects in the sample data. I handle these anyway, by simply doing a search on every value of a nested object.
 
 I didn't add in a way on how to search for entries that do not have the search key in the list entry. Although you can search for empty values as requested, simply press enter when asked for the search term. 

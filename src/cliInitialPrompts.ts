@@ -45,7 +45,7 @@ export const askForSearchTerm = async (): Promise<string> => {
     type: "text",
     name: "searchTerm",
     message:
-      'Enter search term (enter "true" or "false" for booleans, "<<NULL>>" for null values, or nothing for empty strings)',
+      'Enter search term (enter "true" or "false" for booleans, "<<NULL>>" for null values, "<<UNDEFINED>>" to search for where that field does not exist, or nothing for empty strings)',
   })
   if (searchTerm == null) {
     throw newError("Cancelled by user", ErrorCode.cancelledByUser)
