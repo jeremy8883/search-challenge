@@ -96,7 +96,8 @@ export const showSearchResults = async (
     log(
       chalk.bold(`Number of results: `) +
         resultsCount +
-        ", Entries scanned: " +
+        ", " +
+        chalk.bold("Entries scanned: ") +
         dbEntryCount
     )
   } catch (error) {

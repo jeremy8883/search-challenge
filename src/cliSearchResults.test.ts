@@ -57,7 +57,8 @@ describe("showSearchResults", () => {
       logStub
     )
     expect(getLogs()).toEqual(
-      `name: John Smith
+      `----
+name: John Smith
 age: 23
 isEnrolled: true
 --
@@ -86,7 +87,8 @@ Number of results: 2, Entries scanned: 5`
       logStub
     )
     expect(getLogs()).toEqual(
-      `name: John Smith
+      `----
+name: John Smith
 tags: ["foo","bar"]
 fizz: {"hello":"world"}
 --
@@ -97,7 +99,8 @@ Number of results: 1, Entries scanned: 5`
   it("shows a message for when no results are found", async () => {
     const { logStub, getLogs } = createLogMock()
     await showSearchResults(createIterator([[]]), "name", 5, logStub)
-    expect(getLogs()).toEqual(`No results found out of 5 entries`)
+    expect(getLogs()).toEqual(`----
+No results found out of 5 entries`)
   })
 
   it("bolds any null values", async () => {
@@ -138,12 +141,14 @@ Number of results: 1, Entries scanned: 5`
       logStub,
       awaitToContinueStub
     )
-    expect(firstPage).toEqual(`name: John Smith
+    expect(firstPage).toEqual(`----
+name: John Smith
 --
 name: Jane Smith
 --`)
     // This would be both page 1 and page 2, since all of the logs are appended together
-    expect(getLogs()).toEqual(`name: John Smith
+    expect(getLogs()).toEqual(`----
+name: John Smith
 --
 name: Jane Smith
 --
